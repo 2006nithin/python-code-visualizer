@@ -1,0 +1,158 @@
+# Python Code Visualizer
+
+A beginner-friendly educational web application for understanding Python execution step by step. The platform executes user code in a controlled backend, captures trace events, and presents a simple visual analysis in a React frontend.
+
+## Architecture overview
+
+- Frontend: Vite + React for the editor, step controls, variable inspector, and comparison panels.
+- Backend: FastAPI API for health checks, code execution, analysis, and comparison.
+- Tracing engine: Python `sys.settrace` with multiprocessing-based isolation and a safe serializer.
+- Tests: frontend quiz/scoring tests using Node's built-in test runner and backend tests using pytest and FastAPI TestClient.
+
+## Project structure
+
+```text
+python-code-visualizer/
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   ├── tracing/
+│   │   │   └── trace_engine.py
+│   │   └── services/
+│   ├── tests/
+│   │   └── test_execution.py
+│   ├── requirements.txt
+│   └── main.py
+├── docs/
+│   ├── architecture.md
+│   ├── api.md
+│   └── security.md
+├── frontend/
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   └── src/
+│       ├── App.jsx
+│       ├── learningFeatures.js
+│       ├── quizScoring.js
+│       ├── main.jsx
+│       └── styles.css
+├── frontend/tests/
+│   ├── learningFeatures.test.js
+│   └── quizScoring.test.js
+├── .gitignore
+├── README.md
+├── run.bat
+└── tests/
+    └── test_notes.txt
+```
+
+## Features
+
+- Python-aware CodeMirror editor with source-line highlighting synchronized to trace steps.
+- Real Python traces with call stacks, variable values/types, detected changes, console output, and errors.
+- Previous, next, play, pause, restart, and adjustable execution-speed controls.
+- AST-derived control-flow diagrams for assignments, branches, loops, functions, classes, and returns; diagram nodes can select trace lines.
+- Live concept analysis, code-matched real-world mappings, list/dictionary memory cells, and relevant W3Schools/GeeksforGeeks resources.
+- A live what-if simulation that compares the current editor code with a saved baseline as code changes, including output, final variables, runtime errors, and trace length.
+- Adaptive concept practice that generates a non-repeating set of 5–10 questions from the current AST analysis, with explanations, final accuracy/results, answer review, retakes, and saved attempt history.
+- GATE CS practice with five original questions per subject, configurable 5/10/15-question sessions, difficulty filters, syllabus coverage, topic/source breakdowns, answer review, incorrect-question retries, and saved attempt history. Scoring is one point per correct answer with no negative marking; timing is not enabled. For verified previous-year papers and answer keys, the UI links directly to the official GATE 2024 archive; archived questions are not republished as original practice.
+- Dark and light themes with saved user preference and operating-system theme used when no choice is saved.
+- Example loader and what-if comparison panel.
+
+The What-if simulation starts from the selected example as its baseline. Edit the code in the existing editor to trigger an automatic comparison; use **Use current code as baseline** to reset the comparison point. Choosing another example also sets that example as the baseline.
+
+## Quick Start in VS Code (Windows)
+
+### Prerequisites
+
+- Git (not needed when downloading the ZIP)
+- Python 3.11 or newer
+- Node.js 20.19+ or 22.12+ (required by Vite 8)
+- VS Code
+
+### Get the project
+
+Clone the repository and enter the actual project folder:
+
+```powershell
+git clone https://github.com/AkshithK27/pythonvisualizernithin.git
+Set-Location pythonvisualizernithin\python-code-visualizer
+```
+
+To use the ZIP instead, download and extract the repository ZIP from GitHub, then open its `python-code-visualizer` subfolder in VS Code. If the outer extracted folder is already open in a terminal, enter the project with `Set-Location .\python-code-visualizer`.
+
+If you already opened the `python-code-visualizer` project folder in VS Code, skip the clone/extract steps. Run the following from that project root to create the Python environment and install backend dependencies:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+```
+
+### Start the application
+
+Open a terminal in VS Code for the backend and run:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --app-dir backend --reload --host 127.0.0.1 --port 8000
+```
+
+Open a second terminal for the frontend:
+
+```powershell
+Set-Location frontend
+npm install
+npm run dev
+```
+
+Open http://127.0.0.1:5173 in your browser. Keep both terminals open while using the visualizer. The backend health check is http://127.0.0.1:8000/health.
+
+For a one-click Windows launch, run `run.bat` from the project root (double-click it in File Explorer or run `.\run.bat` in PowerShell). It creates `.venv` if needed, installs dependencies, and starts the API and frontend in separate terminals. Keep both terminals open. The first launch needs an internet connection to install packages.
+
+The frontend uses `http://127.0.0.1:8000` by default. Set `VITE_API_BASE_URL` before starting Vite to use another local API URL.
+
+## Deploy the frontend to Vercel
+
+The current executor is intended for local learning and is not a hardened public sandbox. Deploy only the static frontend until a secured execution API is available.
+
+1. Import `https://github.com/AkshithK27/pythonvisualizernithin` as a new Vercel project.
+2. Set **Root Directory** to `python-code-visualizer/frontend`.
+3. Select **Vite** as the framework preset, use `npm run build` as the build command, and `dist` as the output directory.
+4. Leave `VITE_API_BASE_URL` unset for a frontend-only deployment, then deploy.
+
+The deployed page will explain that analysis, execution, and comparison need a separately secured API. Do not point `VITE_API_BASE_URL` at a developer's `localhost` or expose the current execution backend publicly. Local development continues to use `http://127.0.0.1:8000` automatically.
+
+## Running tests
+
+Run the frontend build and quiz scoring tests:
+
+```powershell
+Set-Location frontend
+npm test
+npm run build
+```
+
+Run the backend test suite:
+
+```bat
+Set-Location backend
+..\.venv\Scripts\python.exe -m pytest tests -q
+```
+
+## Important security note
+
+This is a local educational prototype, not a hardened security sandbox. Execution uses a separate process, restricted builtins, blocked imports/introspection, and a timeout, but Python process isolation alone is not a security boundary. Do not expose the API publicly or use it for untrusted submissions. AST analysis is read-only and may explain code that execution policy rejects; the UI reports unsupported constructs.
+
+## Limitations
+
+- Imports are disabled in this educational version.
+- The tracer captures line-by-line execution rather than every bytecode event.
+- Filesystem access, networking, and arbitrary imports are disabled during execution. External resource links require internet access.
+- Exact loop counts are shown only for statically known iterables and `range` arguments.
+- Practice questions are original local material, not verified official GATE previous-year questions.
+
+## Final note
+
+This MVP prioritizes working execution, predictable API contracts, and a clean learning flow over full-language sandboxing.
