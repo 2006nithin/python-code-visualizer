@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Python Code Visualizer</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+  <div class="brand">
+    <div class="py-logo">🐍</div>
+    <div><h1>Python Code Visualizer</h1><p>Write &nbsp;•&nbsp; Execute &nbsp;•&nbsp; Visualize &nbsp;•&nbsp; Learn</p></div>
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn" id="themeBtn">☾</button>
+    <button class="mode-btn">♙ &nbsp; Beginner Mode</button>
+    <button class="avatar">♙</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+  <nav>
+    <button class="nav-item active" data-section="home">⌂ <span>Home</span></button>
+    <button class="nav-item" data-section="editor">‹/› <span>Code Editor</span></button>
+    <button class="nav-item" data-section="scenarios">▣ <span>Real-World Scenarios</span></button>
+    <button class="nav-item" data-section="quiz">? <span>Prediction Quiz</span></button>
+    <button class="nav-item" data-section="whatif">☷ <span>What-If Simulation</span></button>
+    <button class="nav-item" data-section="compare">▰ <span>Compare & Learn</span></button>
+  </nav>
+  <div class="progress-card">
+    <div class="bulb">💡</div><b>Small steps<br>build big skills!</b>
+    <p>Keep practicing,<br>you're doing great!</p>
+    <div class="progress"><i></i></div>
+  </div>
+</aside>
+
+<main class="main">
+<section class="welcome">
+  <div class="welcome-icon">🐍</div>
+  <div class="welcome-copy"><h2>Welcome to Python Visualizer</h2><p>Learn Python by writing code, visualizing execution, exploring real-world examples, answering quizzes and more!</p></div>
+  <div class="feature-strip">
+    <div><b>▶</b><span>Step-by-Step<br>Execution</span></div>
+    <div><b>◉</b><span>Visualize<br>Variables & Flow</span></div>
+    <div><b>◎</b><span>Real-World<br>Examples</span></div>
+    <div><b>?</b><span>Test Your<br>Knowledge</span></div>
+    <div><b>☷</b><span>What-if<br>Simulation</span></div>
+  </div>
+</section>
+
+<section class="workspace">
+<div class="panel editor-panel">
+  <div class="panel-head"><h3>▣ &nbsp; Python Editor</h3><select><option>Python</option></select></div>
+  <div class="editor-wrap"><div class="line-nos" id="lineNos"></div><textarea id="code" spellcheck="false"># Example: Calculate the sum of numbers using a loop
+n = int(input("Enter a number: "))
+total = 0
+for i in range(1, n + 1):
+    total += i
+print("Sum is:", total)</textarea></div>
+  <div class="controls">
+    <button class="primary" id="runBtn">▶ &nbsp; Run</button><button id="stepBtn">▷▷ &nbsp; Step</button><button id="resetBtn">↻ &nbsp; Reset</button><button id="clearBtn">▢ &nbsp; Clear</button>
+  </div>
+  <div class="input-row"><label>Program input (one value per line)</label><textarea id="inputs" rows="2">5</textarea></div>
+</div>
+
+<div class="panel visual-panel">
+  <div class="tabs"><button class="tab active" data-tab="flow">Execution Flow</button><button class="tab" data-tab="variables">Variables</button><button class="tab" data-tab="stack">Call Stack</button><button class="tab" data-tab="output">Output</button></div>
+  <div class="visual-content" id="visualContent"></div>
+  <div class="output-box"><div><b>Output</b><button id="clearOutput">Clear</button></div><pre id="output">Click Run or Step to execute your program.</pre></div>
+</div>
+</section>
+
+<section class="cards">
+<div class="panel feature-card" id="scenarioCard">
+  <div class="card-title"><span class="circle">◎</span><div><h3>Real-World Scenarios</h3><p>Practice with real-life examples</p></div></div>
+  <select id="scenarioSelect"></select><p id="scenarioDesc"></p><button class="primary full" id="loadScenario">Load Scenario</button>
+</div>
+
+<div class="panel feature-card" id="quizCard">
+  <div class="card-title"><span class="circle purple">?</span><div><h3>Prediction Quiz</h3><p>Pause, predict, answer and get scored</p></div></div>
+  <div id="quizQuestion"></div><button class="primary full" id="quizSubmit">Submit</button>
+</div>
+
+<div class="panel feature-card" id="whatifCard">
+  <div class="card-title"><span class="circle purple">☷</span><div><h3>What-If Simulation</h3><p>Modify input or code and see the change</p></div></div>
+  <label>Change input value:</label><input id="whatifInput" value="10">
+  <label>Or modify code:</label><textarea id="whatifCode" rows="6"></textarea>
+  <button class="primary purple-btn full" id="whatifRun">Run Simulation</button><pre class="mini-output" id="whatifOutput"></pre>
+</div>
+
+<div class="panel feature-card" id="compareCard">
+  <div class="card-title"><span class="circle blue">▰</span><div><h3>Compare & Learn</h3><p>See how different approaches work</p></div></div>
+  <div class="approach-tabs"><button class="approach active" data-approach="a">Approach 1</button><button class="approach" data-approach="b">Approach 2</button></div>
+  <pre id="compareCode"></pre><button class="primary full" id="compareRun">Run & Compare</button><div class="compare-result" id="compareResult"></div>
+</div>
+</section>
+</main>
+</div>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>
